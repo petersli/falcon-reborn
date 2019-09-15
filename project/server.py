@@ -1,14 +1,20 @@
-from flask import Flask, render_template
-import json
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+import json, os, random, string
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
     return page_primer()
 
-@app.route("/api/v1/runtime")
+@app.route("/api/v1/runtime", methods=["POST"])
 def runtime():
-    return "xd"
+    file = request.files["file"]
+    extension = os.path.splitext(file.filename)[1]
+    filename = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    secure_filename("static/"+filename+extension)
+    file.save("static/"+filename+extension)
+    return "Success", 200
 
 def page_primer():
     with open("config.json") as json_file:
