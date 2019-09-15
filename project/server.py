@@ -12,8 +12,8 @@ def runtime():
     file = request.files["file"]
     extension = os.path.splitext(file.filename)[1]
     filename = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    secure_filename("static/"+filename+extension)
-    file.save("static/"+filename+extension)
+    secure_filename("static/input/"+filename+extension)
+    file.save("static/input/"+filename+extension)
     return "Success", 200
 
 def page_primer():
@@ -24,6 +24,6 @@ def page_primer():
     input_size = [int(value) for value in data["input"].split(".")[1].split("x")]
     output_size = [int(value) for value in data["output"].split(".")[1].split("x")]
 
-    return render_template("index.html", input=str(input_size), output=str(output_size))
+    return render_template("index.html", input=str(input_size), output=str(output_size), page_info=data["page_info"], page_subheading=data["page_subheading"])
 
 
