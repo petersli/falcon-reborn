@@ -25,9 +25,9 @@ def run(input_id):
     model = torch.hub.load('mateuszbuda/brain-segmentation-pytorch', 'unet',
         in_channels=3, out_channels=1, init_features=32, pretrained=False)
 
-    model = torch.load("model.pt")
+    model.load_state_dict(torch.load("model.pt"))
 
-    input_dir = os.path.join(os.getcwd(),'static', 'input', input_id)
+    input_dir = os.path.join(os.getcwd(),'static', 'input', input_id + '.png')
     input_image = Image.open(input_dir)
 
     m, s = np.mean(input_image, axis=(0, 1)), np.std(input_image, axis=(0, 1))
@@ -37,6 +37,7 @@ def run(input_id):
     ])
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0)
+    print(input_batch)
 
     if torch.cuda.is_available():
         input_batch = input_batch.to('cuda')
@@ -45,4 +46,6 @@ def run(input_id):
     with torch.no_grad():
         output = model(input_batch)
 
-    torchvision.utils.save_image(torch.round(output[0]), "os.path.join(os.getcwd(), 'static', 'output', input_id")
+    torchvision.utils.save_image(torch.round(output[0]), os.path.join(os.getcwd(), 'static', 'output', input_id + '.png'))
+
+run('med')
